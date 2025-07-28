@@ -36,7 +36,7 @@ function AdminPage() {
   }, []);
 
   const fetchProblems = async () => {
-    const res = await axios.get('http://localhost:5000/api/problems/all');
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/problems/all`);
     setProblems(res.data);
   };
 
@@ -52,7 +52,7 @@ function AdminPage() {
 
     try {
       console.log('Sending description to AI:', formData.description);
-      const res = await fetch('http://localhost:5000/api/ai/generate-metadata', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/ai/generate-metadata`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ description: formData.description })
@@ -124,7 +124,7 @@ function AdminPage() {
     console.log('Final payload:', payload);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/problems/create', payload);
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/problems/create`, payload);
       console.log('Problem creation response:', response.data);
       setMessage('✅ Problem created!');
       setFormData({ title: '', description: '', difficulty: 'Easy', tags: '' });
@@ -160,7 +160,7 @@ function AdminPage() {
     e.preventDefault();
     if (!editingProblem) return;
     try {
-      await axios.put(`http://localhost:5000/api/problems/${editingProblem._id}`, {
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/problems/${editingProblem._id}`, {
         ...formData,
         tags: formData.tags.split(',').map(t => t.trim()),
         inputFormat, outputFormat, constraints, example, testCases
@@ -184,7 +184,7 @@ function AdminPage() {
   const handleDelete = async (id) => {
     if (window.confirm('Delete this problem?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/problems/${id}`);
+        await axios.delete(`${import.meta.env.VITE_API_URL}/api/problems/${id}`);
         fetchProblems();
         setMessage('✅ Problem deleted!');
       } catch (err) {

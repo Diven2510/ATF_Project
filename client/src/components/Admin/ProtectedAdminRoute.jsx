@@ -24,7 +24,7 @@ function ProtectedAdminRoute({ children }) {
       try {
         console.log('Verifying admin token with backend...');
         // Verify admin token with backend
-        const res = await fetch('http://localhost:5000/api/auth/verify-admin', {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/verify-admin`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${adminToken}`

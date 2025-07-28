@@ -9,12 +9,12 @@ function HomePage() {
   const [verdicts, setVerdicts] = useState({});
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/problems/all')
+    axios.get(`${import.meta.env.VITE_API_URL}/api/problems/all`)
       .then(res => setProblems(res.data))
       .catch(err => console.error('Fetch error:', err));
     const userId = localStorage.getItem('userId');
     if (userId) {
-      axios.get('http://localhost:5000/api/submissions/user-problem-verdicts', { params: { userId } })
+      axios.get(`${import.meta.env.VITE_API_URL}/api/submissions/user-problem-verdicts`, { params: { userId } })
         .then(res => setVerdicts(res.data))
         .catch(() => {});
     }

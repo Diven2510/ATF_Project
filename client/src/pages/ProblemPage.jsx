@@ -11,7 +11,7 @@ function ProblemPage() {
   const [loadingHint, setLoadingHint] = useState(false);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/problems/${id}`)
+    fetch(`${import.meta.env.VITE_API_URL}/api/problems/${id}`)
       .then(res => res.json())
       .then(data => setProblem(data))
       .catch(err => console.error(err));
@@ -22,7 +22,7 @@ function ProblemPage() {
     setLoadingHint(true);
     setHint('');
     try {
-      const res = await axios.post('http://localhost:5000/api/ai/hint', { problem: problem.description });
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/ai/hint`, { problem: problem.description });
       setHint(res.data.hint);
     } catch (err) {
       setHint('Failed to get hint.');

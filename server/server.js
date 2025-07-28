@@ -9,7 +9,16 @@ import submissionRoutes from './routes/submissionRoutes.js';
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'https://your-vercel-app.vercel.app',
+    'https://algotesters.live',
+    'https://www.algotesters.live'
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 const PORT = process.env.PORT || 5000;

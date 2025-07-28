@@ -22,7 +22,7 @@ function CodeEditor({ problemId, darkMode }) {
 
   useEffect(() => {
     // Fetch problem details to get test cases
-    fetch(`http://localhost:5000/api/problems/${problemId}`)
+    fetch(`${import.meta.env.VITE_API_URL}/api/problems/${problemId}`)
       .then(res => res.json())
       .then(data => setProblem(data))
       .catch(err => console.error(err));
@@ -30,7 +30,7 @@ function CodeEditor({ problemId, darkMode }) {
     // Fetch last submission for this user/problem/language
     const userId = localStorage.getItem('userId');
     if (userId) {
-      axios.get('http://localhost:5000/api/submissions/last', {
+      axios.get(`${import.meta.env.VITE_API_URL}/api/submissions/last`, {
         params: { userId, problemId, language }
       })
         .then(res => {
@@ -49,7 +49,7 @@ function CodeEditor({ problemId, darkMode }) {
       return;
     }
     try {
-      await axios.post('http://localhost:5000/api/submissions/save', {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/submissions/save`, {
         userId,
         problemId,
         code: codeToSave,
@@ -64,7 +64,7 @@ function CodeEditor({ problemId, darkMode }) {
 
   const runCode = async () => {
     try {
-      const res = await axios.post('http://56.228.22.181:7000/run', {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/run`, {
         language,
         code,
         problemId,
@@ -90,7 +90,7 @@ function CodeEditor({ problemId, darkMode }) {
     setLoadingExplain(true);
     setExplanation('');
     try {
-      const res = await axios.post('http://localhost:5000/api/ai/explain', { code });
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/ai/explain`, { code });
       setExplanation(res.data.explanation);
     } catch (err) {
       setExplanation('Failed to get explanation.');
@@ -135,7 +135,7 @@ function CodeEditor({ problemId, darkMode }) {
     setOutput('');
 
     try {
-      const res = await axios.post('http://56.228.22.181:7000/submit', {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/submit`, {
         language,
         code,
         testCases: problem.testCases

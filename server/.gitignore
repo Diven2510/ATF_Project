@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 .env*
-/keys/*
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -23,3 +23,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+**/keys/*
+# server/algotesters_complete.conf
+# server/algotesters_fixed.conf
+algotesters_complete.conf
+algotesters_fixed.conf

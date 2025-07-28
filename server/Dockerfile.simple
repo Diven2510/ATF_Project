@@ -20,9 +20,10 @@ RUN npm ci --only=production && npm cache clean --force
 # Copy source code
 COPY . .
 
-# Create non-root user for security
-RUN useradd -m -u 1001 appuser && \
-    chown -R appuser:appuser /app
+# Create non-root user with dynamic UID
+RUN groupadd -g 1001 appgroup && \
+    useradd -u 1001 -g appgroup -m -s /bin/bash appuser && \
+    chown -R appuser:appgroup /app
 
 # Switch to non-root user
 USER appuser

@@ -6,7 +6,7 @@ function LeaderboardPage() {
   const [leaders, setLeaders] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/submissions/leaderboard')
+    fetch(`${import.meta.env.VITE_API_URL}/api/submissions/leaderboard`)
       .then(res => res.json())
       .then(data => setLeaders(data))
       .catch(() => {});
