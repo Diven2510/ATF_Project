@@ -1,19 +1,35 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getApiUrl } from '../../utils/env';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  
   const handleLogin = async (e) => {
     e.preventDefault();
+    
+    // Get API URL safely
+    const apiUrl = getApiUrl();
+    
+    // Debug: Log the API URL
+    console.log('API URL:', apiUrl);
+    console.log('Full URL:', `${apiUrl}/api/auth/login`);
+    
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+      const res = await fetch(`${apiUrl}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
+      
+      console.log('Response status:', res.status);
+      console.log('Response headers:', res.headers);
+      
       const data = await res.json();
+      console.log('Response data:', data);
+      
       if (res.ok) {
         localStorage.setItem('token', data.token);
         if (data.userId) localStorage.setItem('userId', data.userId);
@@ -23,8 +39,8 @@ function Login() {
         alert(data.msg);
       }
     } catch (err) {
-      console.error(err);
-      alert('Login failed');
+      console.error('Login error:', err);
+      alert('Login failed: ' + err.message);
     }
   };
 
