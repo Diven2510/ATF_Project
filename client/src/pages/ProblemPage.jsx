@@ -69,7 +69,12 @@ function ProblemPage() {
                     </thead>
                     <tbody>
                       <tr>
-                        <td className="px-4 py-2 border">{problem.example.input}</td>
+                        <td className="px-4 py-2 border">
+                          {typeof problem.example.input === 'object' 
+                            ? JSON.stringify(problem.example.input, null, 2)
+                            : problem.example.input
+                          }
+                        </td>
                         <td className="px-4 py-2 border">{problem.example.output}</td>
                       </tr>
                     </tbody>
