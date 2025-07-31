@@ -186,7 +186,12 @@ app.post('/submit', async (req, res) => {
 
         // Run all test cases
         testCases.forEach((testCase, index) => {
-          runProcess(runCmd, testCase.input, (err, stdout, stderr) => {
+          // Handle both string and object inputs
+          const input = typeof testCase.input === 'object' 
+            ? JSON.stringify(testCase.input) 
+            : testCase.input;
+            
+          runProcess(runCmd, input, (err, stdout, stderr) => {
             const expectedOutput = testCase.expectedOutput.trim();
             const actualOutput = stdout.trim();
             const passed = actualOutput === expectedOutput;
@@ -195,7 +200,7 @@ app.post('/submit', async (req, res) => {
 
             results.push({
               testCase: index + 1,
-              input: testCase.input,
+              input: input,
               expectedOutput: expectedOutput,
               actualOutput: actualOutput,
               passed: passed,
@@ -225,7 +230,12 @@ app.post('/submit', async (req, res) => {
     } else {
       // For interpreted languages like Python
       testCases.forEach((testCase, index) => {
-        runProcess(runCmd, testCase.input, (err, stdout, stderr) => {
+        // Handle both string and object inputs
+        const input = typeof testCase.input === 'object' 
+          ? JSON.stringify(testCase.input) 
+          : testCase.input;
+          
+        runProcess(runCmd, input, (err, stdout, stderr) => {
           const expectedOutput = testCase.expectedOutput.trim();
           const actualOutput = stdout.trim();
           const passed = actualOutput === expectedOutput;
@@ -234,7 +244,7 @@ app.post('/submit', async (req, res) => {
 
           results.push({
             testCase: index + 1,
-            input: testCase.input,
+            input: input,
             expectedOutput: expectedOutput,
             actualOutput: actualOutput,
             passed: passed,
