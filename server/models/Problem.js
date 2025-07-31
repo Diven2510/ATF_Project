@@ -9,12 +9,12 @@ const ProblemSchema = new mongoose.Schema({
   outputFormat: String,
   constraints: String,
   example: {
-    input: String,
+    input: mongoose.Schema.Types.Mixed, // Allow both string and object
     output: String,
     explanation: String
   },
   testCases: [{
-    input: String,
+    input: mongoose.Schema.Types.Mixed, // Allow both string and object
     expectedOutput: String,
     description: String
   }],

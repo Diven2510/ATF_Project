@@ -1,5 +1,6 @@
 // controllers/problemController.js
 import Problem from '../models/Problem.js';
+import mongoose from 'mongoose';
 
 export const createProblem = async (req, res) => {
   const { title, description, difficulty, tags, inputFormat, outputFormat, constraints, example, testCases } = req.body;
@@ -107,26 +108,38 @@ export const updateProblem = async (req, res) => {
   });
 
   try {
-    const updatedProblem = await Problem.findByIdAndUpdate(
-      id,
-      { 
-        title, 
-        description, 
-        difficulty, 
-        tags, 
-        inputFormat, 
-        outputFormat, 
-        constraints, 
-        example,
-        testCases 
-      },
-      { new: true, runValidators: true }
-    );
+    // Validate ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      console.log('Invalid ObjectId:', id);
+      return res.status(400).json({ message: 'Invalid problem ID format' });
+    }
 
-    if (!updatedProblem) {
+    // Check if problem exists first
+    const existingProblem = await Problem.findById(id);
+    if (!existingProblem) {
       console.log(`Problem not found for update with ID: ${id}`);
       return res.status(404).json({ message: 'Problem not found' });
     }
+
+    // Prepare update data
+    const updateData = {};
+    if (title !== undefined) updateData.title = title;
+    if (description !== undefined) updateData.description = description;
+    if (difficulty !== undefined) updateData.difficulty = difficulty;
+    if (tags !== undefined) updateData.tags = tags;
+    if (inputFormat !== undefined) updateData.inputFormat = inputFormat;
+    if (outputFormat !== undefined) updateData.outputFormat = outputFormat;
+    if (constraints !== undefined) updateData.constraints = constraints;
+    if (example !== undefined) updateData.example = example;
+    if (testCases !== undefined) updateData.testCases = testCases;
+
+    console.log('Final update data:', updateData);
+
+    const updatedProblem = await Problem.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true, runValidators: true }
+    );
 
     console.log('Problem updated successfully:', {
       _id: updatedProblem._id,
@@ -140,6 +153,23 @@ export const updateProblem = async (req, res) => {
     });
   } catch (err) {
     console.error('Error updating problem:', err);
+    
+    // Handle specific error types
+    if (err.name === 'ValidationError') {
+      return res.status(400).json({ 
+        message: 'Validation error', 
+        error: err.message,
+        details: Object.values(err.errors).map(e => e.message)
+      });
+    }
+    
+    if (err.name === 'CastError') {
+      return res.status(400).json({ 
+        message: 'Invalid data format', 
+        error: err.message 
+      });
+    }
+
     res.status(500).json({ 
       message: 'Server error', 
       error: err.message 
